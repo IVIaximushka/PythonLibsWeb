@@ -1,6 +1,6 @@
 import pandas as pd
 
-from web.models import StudyPlan, StudyPlanDiscipline, Discipline, Speciality, Institute
+from web.models import Discipline, Institute, Speciality, StudyPlan, StudyPlanDiscipline
 
 
 def deactivate():
@@ -39,12 +39,8 @@ def load_study_plans(speciality: Speciality, study_plans: list[str]) -> None:
 
 
 def _save_discipline(study_plan: StudyPlan, discipline: pd.Series, course: int, semester) -> None:
-    string_semester = 'first' if semester == 1 else 'second'
-    disc, created = Discipline.objects.get_or_create(
-        name=discipline["name"],
-        code=discipline["id"],
-        by_choice=True
-    )
+    string_semester = "first" if semester == 1 else "second"
+    disc, created = Discipline.objects.get_or_create(name=discipline["name"], code=discipline["id"], by_choice=True)
     if not created:
         disc.is_active = True
         disc.save()
@@ -52,13 +48,13 @@ def _save_discipline(study_plan: StudyPlan, discipline: pd.Series, course: int, 
     st_plan_disc, created = StudyPlanDiscipline.objects.get_or_create(
         course=course,
         semester=semester,
-        exam=(discipline[f'{string_semester}_ex'] == '+'),
-        test=(discipline[f'{string_semester}_test'] == '+'),
-        lecture=int(discipline[f'{string_semester}_lec']),
-        practice=int(discipline[f'{string_semester}_prac']),
-        lab=int(discipline[f'{string_semester}_lab']),
+        exam=(discipline[f"{string_semester}_ex"] == "+"),
+        test=(discipline[f"{string_semester}_test"] == "+"),
+        lecture=int(discipline[f"{string_semester}_lec"]),
+        practice=int(discipline[f"{string_semester}_prac"]),
+        lab=int(discipline[f"{string_semester}_lab"]),
         study_plan=study_plan,
-        discipline=disc
+        discipline=disc,
     )
     if not created:
         st_plan_disc.is_active = True
@@ -70,7 +66,6 @@ def _save_discipline_by_semester(study_plan: StudyPlan, discipline: pd.Series, c
         _save_discipline(study_plan, discipline, course, 1)
     if isinstance(discipline["second_lec"], str):
         _save_discipline(study_plan, discipline, course, 2)
-
 
 
 def load_disciplines(study_plan: StudyPlan, data: pd.DataFrame, course: int) -> None:

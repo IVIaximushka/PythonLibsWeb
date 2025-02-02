@@ -27,7 +27,7 @@ def get_faculties(driver: webdriver.Chrome) -> dict:
     faculties = {}
     institute, school = "", ""
     for faculty in faculty_list:
-        if 'Институт вычислительной математики' in faculty:
+        if "Институт вычислительной математики" in faculty:
             if " " * 12 in faculty:
                 school = faculty.strip()
                 faculties[institute].append(school)
