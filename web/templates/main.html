@@ -1,4 +1,167 @@
 {% extends 'base.html' %}
 {% block content %}
-    <button onclick="location.href='{% url 'update' %}'">Обновить данные</button>
+    {% if user.is_superuser %}
+        <button onclick="location.href='{% url 'update' %}'">Обновить данные</button>
+    {% endif %}
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <select id="institute" name="institute" onchange="changeInstitute()">
+            <option value=""></option>
+            {% for institute in institutes %}
+                <option value="{{ institute.name }}">{{ institute.name }}</option>
+            {% endfor %}
+        </select>
+
+        <select id="speciality" name="speciality" onchange="changeSpeciality()" style="display: none">
+            <option value=""></option>
+        </select>
+
+        <select id="study_plan" name="study_plan" onchange="changeStudyPlan()" style="display: none">
+            <option value=""></option>
+        </select>
+
+        <input id="get_study_plans" type="submit" value="Показать учбеные планы" style="display: none">
+    </form>
+
+    {% if failure %}
+        Что-то пошло не так, попробуйте выбрать другой план
+    {% endif %}
+    {% if data|length > 0 %}
+        {% for course in data %}
+        	<p>{{ course.course }} курс</p>
+
+        	<p>1 семестр</p>
+
+            <ul>
+                {% for discipline in course.disciplines.ordinary %}
+                    {% if discipline.semester == 1 %}
+                        <li>
+                            {{ discipline.name }}
+                            Экзамен {% if discipline.exam %}+{% else %}-{% endif %}
+                            Зачёт {% if discipline.test %}+{% else %}-{% endif %}
+                            {{ discipline.lecture }}/{{ discipline.practice }}/{{ discipline.lab }}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% for discipline in course.disciplines.by_choice %}
+                    {% if discipline.semester == 1 %}
+                        <li>
+                            {{ discipline.name }}
+                            Экзамен {% if discipline.exam %}+{% else %}-{% endif %}
+                            Зачёт {% if discipline.test %}+{% else %}-{% endif %}
+                            {{ discipline.lecture }}/{{ discipline.practice }}/{{ discipline.lab }}
+                            <ol>
+                                {% for discipline_by_choice in discipline.disciplines %}
+                                	<li>
+                                        {{ discipline_by_choice }}
+                                    </li>
+                                {% endfor %}
+                            </ol>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+
+            <p>2 семестр</p>
+
+            <ul>
+                {% for discipline in course.disciplines.ordinary %}
+                    {% if discipline.semester == 2 %}
+                        <li>
+                            {{ discipline.name }}
+                            Экзамен {% if discipline.exam %}+{% else %}-{% endif %}
+                            Зачёт {% if discipline.test %}+{% else %}-{% endif %}
+                            {{ discipline.lecture }}/{{ discipline.practice }}/{{ discipline.lab }}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% for discipline in course.disciplines.by_choice %}
+                    {% if discipline.semester == 2 %}
+                        <li>
+                            {{ discipline.name }}
+                            Экзамен {% if discipline.exam %}+{% else %}-{% endif %}
+                            Зачёт {% if discipline.test %}+{% else %}-{% endif %}
+                            {{ discipline.lecture }}/{{ discipline.practice }}/{{ discipline.lab }}
+                            <ol>
+                                {% for discipline_by_choice in discipline.disciplines %}
+                                	<li>
+                                        {{ discipline_by_choice }}
+                                    </li>
+                                {% endfor %}
+                            </ol>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% endif %}
+
+    <script>
+        function changeInstitute() {
+            institute = document.getElementById('institute');
+            speciality = document.getElementById('speciality');
+            studyPlan = document.getElementById('study_plan');
+            button = document.getElementById('get_study_plans');
+            speciality.options.length = 1;
+            if (institute.options[institute.selectedIndex].value !== "")
+            {
+                speciality.style.display = "inline";
+                {% for speciality in specialities %}
+                    if (institute.options[institute.selectedIndex].value === '{{ speciality.institute.name }}')
+                    {
+                        var oOption = document.createElement("option");
+                        oOption.value = '{{ speciality.name }}';
+                        oOption.text = '{{ speciality.name }}';
+                        speciality.append(oOption);
+                    }
+                {% endfor %}
+                console.log(2);
+            }
+            else
+            {
+                speciality.style.display = "none";
+                studyPlan.style.display = "none";
+                button.style.display = "none";
+            }
+        }
+    </script>
+    <script>
+        function changeSpeciality() {
+            speciality = document.getElementById('speciality');
+            studyPlan = document.getElementById('study_plan');
+            button = document.getElementById('get_study_plans');
+            studyPlan.options.length = 1;
+            if (speciality.options[speciality.selectedIndex].value !== "")
+            {
+                studyPlan.style.display = "inline";
+                {% for study_plan in study_plans %}
+                    if (speciality.options[speciality.selectedIndex].value === '{{ study_plan.speciality.name }}')
+                    {
+                        var oOption = document.createElement("option");
+                        oOption.value = '{{ study_plan.name }}';
+                        oOption.text = '{{ study_plan.name }}';
+                        studyPlan.append(oOption);
+                    }
+                {% endfor %}
+                console.log(3);
+            }
+            else
+                studyPlan.style.display = "none";
+                button.style.display = "none";
+        }
+    </script>
+    <script>
+        function changeStudyPlan() {
+            studyPlan = document.getElementById('study_plan')
+            button = document.getElementById('get_study_plans');
+            if (studyPlan.options[studyPlan.selectedIndex].value !== "")
+            {
+                button.style.display = "inline";
+                console.log(4);
+            }
+            else
+                button.style.display = "none";
+        }
+    </script>
 {% endblock %}

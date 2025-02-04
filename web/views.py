@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from web.forms import AuthenticationForm, RegistrationForm
-from web.models import Institute, Speciality, StudyPlan, User
+from web.models import Institute, Speciality, StudyPlan, User, StudyPlanDiscipline
 from web.tools.load_data_tools import (
     deactivate,
     load_disciplines,
@@ -32,7 +32,70 @@ from web.tools.web_tools import (
 
 @login_required(login_url="/authentication")
 def main_view(request):
-    return render(request, "main.html")
+    context = {
+        "institutes": Institute.objects.filter(is_active=True),
+        "specialities": Speciality.objects.filter(is_active=True),
+        "study_plans": StudyPlan.objects.filter(is_active=True),
+        "failure": False,
+        "data": [],
+    }
+    if request.method == 'POST':
+        post_data = request.POST
+        study_plan = StudyPlan.objects.filter(name=post_data["study_plan"], is_active=True)
+        if not study_plan.exists():
+            context["failure"] = True
+            return render(request, "main.html", context)
+
+        study_plan = study_plan.first()
+        disciplines = StudyPlanDiscipline.objects.filter(study_plan=study_plan, is_active=True)
+        if not disciplines.exists():
+            context["failure"] = True
+            return render(request, "main.html", context)
+
+        courses = disciplines.order_by("course").values_list("course", flat=True).distinct()
+        data_by_course = []
+        for course in courses:
+            disciplines_by_course = disciplines.filter(course=course)
+            data = {"ordinary": [], "by_choice": []}
+            by_choice = disciplines_by_course.filter(by_choice=True)
+            ordinary = disciplines_by_course.exclude(id__in=by_choice.values("id"))
+            if ordinary.exists():
+                for discipline in ordinary:
+                    data["ordinary"].append({
+                        "code": discipline.code,
+                        "name": discipline.discipline.name,
+                        "course": discipline.course,
+                        "semester": discipline.semester,
+                        "exam": discipline.exam,
+                        "test": discipline.test,
+                        "lecture": discipline.lecture,
+                        "practice": discipline.practice,
+                        "lab": discipline.lab,
+                    })
+
+            if by_choice.exists():
+                main_by_choice = by_choice.filter(discipline__name__contains="по выбору ")
+                for discipline in main_by_choice:
+                    another_disciplines = by_choice.filter(code__startswith=discipline.code)
+                    data["by_choice"].append({
+                        "code": discipline.code,
+                        "name": discipline.discipline.name,
+                        "course": discipline.course,
+                        "semester": discipline.semester,
+                        "exam": discipline.exam,
+                        "test": discipline.test,
+                        "lecture": discipline.lecture,
+                        "practice": discipline.practice,
+                        "lab": discipline.lab,
+                        "disciplines": []
+                    })
+
+                    for another_discipline in another_disciplines:
+                        data["by_choice"][-1]["disciplines"].append(another_discipline.discipline.name)
+            data_by_course.append({"course": course, "disciplines": data})
+        context["data"] = data_by_course
+
+    return render(request, "main.html", context=context)
 
 
 def registration_view(request):
@@ -76,6 +139,8 @@ def logout_view(request):
 
 @login_required(login_url="/authentication/")
 def update_data_view(request):
+    if not request.user.is_superuser:
+        return redirect("main")
     try:
         driver = begin_connection()
         faculties = get_faculties(driver)
