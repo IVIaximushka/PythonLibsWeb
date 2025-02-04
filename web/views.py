@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from web.forms import RegistrationForm, AuthenticationForm
+from web.forms import AuthenticationForm, RegistrationForm
 from web.models import Institute, Speciality, StudyPlan, User
 from web.tools.load_data_tools import (
     deactivate,
@@ -38,40 +38,38 @@ def main_view(request):
 def registration_view(request):
     is_success = False
     form = RegistrationForm()
-    if request.method == 'POST':
+    if request.method == "POST":
         form = RegistrationForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             user = User(
-                username=form.cleaned_data['username'],
-                email=form.cleaned_data['email']
+                username=form.cleaned_data["username"], email=form.cleaned_data["email"]
             )
-            user.set_password(form.cleaned_data['password'])
+            user.set_password(form.cleaned_data["password"])
             user.save()
             is_success = True
-    return render(request, 'registration.html', {
-        'form': form,
-        'is_success': is_success
-    })
+    return render(
+        request, "registration.html", {"form": form, "is_success": is_success}
+    )
 
 
 def auth_view(request):
     form = AuthenticationForm()
-    if request.method == 'POST':
+    if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = authenticate(**form.cleaned_data)
             if user is None:
-                form.add_error(None, 'Введены неверные данные')
+                form.add_error(None, "Введены неверные данные")
             else:
                 login(request, user)
-                return redirect('main')
-    return render(request, 'auth.html', {'form': form})
+                return redirect("main")
+    return render(request, "auth.html", {"form": form})
 
 
 @login_required(login_url="/authentication/")
 def logout_view(request):
     logout(request)
-    return redirect('main')
+    return redirect("main")
 
 
 @login_required(login_url="/authentication/")
