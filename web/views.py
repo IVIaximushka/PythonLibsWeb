@@ -2,7 +2,8 @@ import logging
 
 from django.shortcuts import redirect, render
 
-from web.models import Institute, Speciality, StudyPlan
+from web.forms import RegistrationForm
+from web.models import Institute, Speciality, StudyPlan, User
 from web.tools.load_data_tools import (
     deactivate,
     load_disciplines,
@@ -29,6 +30,25 @@ from web.tools.web_tools import (
 
 def main_view(request):
     return render(request, "main.html")
+
+
+def registration_view(request):
+    is_success = False
+    form = RegistrationForm()
+    if request.method == 'POST':
+        form = RegistrationForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            user = User(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email']
+            )
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            is_success = True
+    return render(request, 'registration.html', {
+        'form': form,
+        'is_success': is_success
+    })
 
 
 def update_data_view(request):

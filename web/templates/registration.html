@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Регистрация</h1>
+    {% if is_success == True %}
+        <p><b><i>Спасибо за регистрацию!</i></b></p>
+        <button onclick="location.href='{% url 'main' %}'">На главную</button>
+    {% else %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button>Зарегистрироваться</button>
+        </form>
+    {% endif %}
+{% endblock %}
