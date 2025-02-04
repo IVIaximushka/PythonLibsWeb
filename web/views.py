@@ -30,7 +30,7 @@ from web.tools.web_tools import (
 )
 
 
-@login_required(login_url="/authentication/")
+@login_required(login_url="/authentication")
 def main_view(request):
     return render(request, "main.html")
 
@@ -46,7 +46,9 @@ def registration_view(request):
             )
             user.set_password(form.cleaned_data["password"])
             user.save()
-            is_success = True
+            user = authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password"])
+            login(request, user)
+            return redirect("main")
     return render(
         request, "registration.html", {"form": form, "is_success": is_success}
     )
