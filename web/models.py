@@ -26,7 +26,6 @@ class Discipline(models.Model):
     name = models.CharField(max_length=200)
     is_active = models.BooleanField(default=True)
     code = models.CharField(max_length=100)
-    by_choice = models.BooleanField()
 
 
 class StudyPlanDiscipline(models.Model):
@@ -38,5 +37,6 @@ class StudyPlanDiscipline(models.Model):
     lecture = models.IntegerField()
     practice = models.IntegerField()
     lab = models.IntegerField()
+    by_choice = models.BooleanField(default=False)
     study_plan = models.ForeignKey(StudyPlan, on_delete=models.CASCADE)
     discipline = models.ForeignKey(Discipline, on_delete=models.CASCADE)
