@@ -38,9 +38,9 @@ def load_study_plans(speciality: Speciality, study_plans: list[str]) -> None:
             st_plan.save()
 
 
-def _save_discipline(study_plan: StudyPlan, discipline: pd.Series, course: int, semester) -> None:
+def _save_discipline(study_plan: StudyPlan, discipline: pd.Series, course: int, semester, by_choice) -> None:
     string_semester = "first" if semester == 1 else "second"
-    disc, created = Discipline.objects.get_or_create(name=discipline["name"], code=discipline["id"], by_choice=True)
+    disc, created = Discipline.objects.get_or_create(name=discipline["name"], code=discipline["id"])
     if not created:
         disc.is_active = True
         disc.save()
@@ -55,17 +55,18 @@ def _save_discipline(study_plan: StudyPlan, discipline: pd.Series, course: int, 
         lab=int(discipline[f"{string_semester}_lab"]),
         study_plan=study_plan,
         discipline=disc,
+        by_choice=by_choice
     )
     if not created:
         st_plan_disc.is_active = True
         st_plan_disc.save()
 
 
-def _save_discipline_by_semester(study_plan: StudyPlan, discipline: pd.Series, course: int) -> None:
+def _save_discipline_by_semester(study_plan: StudyPlan, discipline: pd.Series, course: int, by_choice=False) -> None:
     if isinstance(discipline["first_lec"], str):
-        _save_discipline(study_plan, discipline, course, 1)
+        _save_discipline(study_plan, discipline, course, 1, by_choice=by_choice)
     if isinstance(discipline["second_lec"], str):
-        _save_discipline(study_plan, discipline, course, 2)
+        _save_discipline(study_plan, discipline, course, 2, by_choice=by_choice)
 
 
 def load_disciplines(study_plan: StudyPlan, data: pd.DataFrame, course: int) -> None:
@@ -73,7 +74,7 @@ def load_disciplines(study_plan: StudyPlan, data: pd.DataFrame, course: int) -> 
     disciplines = disciplines[disciplines["id"].notna()]
     by_choice = data[data["name"].str.contains("по выбору ", case=False)]
     for index, discipline in by_choice.iterrows():
-        _save_discipline_by_semester(study_plan, discipline, course)
+        _save_discipline_by_semester(study_plan, discipline, course, by_choice=True)
         disciplines_by_choice = data[
             data["id"].notna()
             & data["id"].str.contains(discipline["id"])
@@ -81,7 +82,7 @@ def load_disciplines(study_plan: StudyPlan, data: pd.DataFrame, course: int) -> 
         ]
 
         for index_by_choice, discipline_by_choice in disciplines_by_choice.iterrows():
-            _save_discipline_by_semester(study_plan, discipline_by_choice, course)
+            _save_discipline_by_semester(study_plan, discipline_by_choice, course, by_choice=True)
 
         disciplines = disciplines[~(disciplines["id"].str.contains(discipline["id"]))]
 
