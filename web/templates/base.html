@@ -10,6 +10,7 @@
         {% if user.is_anonymous %}
             <div style="text-align: right">
                 <a href="{% url 'registration' %}">Регистрация</a>
+                <a href="{% url 'authentication' %}">Вход</a>
             </div>
         {% else %}
             <div style="text-align: right">

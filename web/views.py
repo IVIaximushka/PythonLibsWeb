@@ -1,8 +1,10 @@
 import logging
 
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from web.forms import RegistrationForm
+from web.forms import RegistrationForm, AuthenticationForm
 from web.models import Institute, Speciality, StudyPlan, User
 from web.tools.load_data_tools import (
     deactivate,
@@ -28,6 +30,7 @@ from web.tools.web_tools import (
 )
 
 
+@login_required(login_url="/authentication/")
 def main_view(request):
     return render(request, "main.html")
 
@@ -51,6 +54,27 @@ def registration_view(request):
     })
 
 
+def auth_view(request):
+    form = AuthenticationForm()
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = authenticate(**form.cleaned_data)
+            if user is None:
+                form.add_error(None, 'Введены неверные данные')
+            else:
+                login(request, user)
+                return redirect('main')
+    return render(request, 'auth.html', {'form': form})
+
+
+@login_required(login_url="/authentication/")
+def logout_view(request):
+    logout(request)
+    return redirect('main')
+
+
+@login_required(login_url="/authentication/")
 def update_data_view(request):
     try:
         driver = begin_connection()
