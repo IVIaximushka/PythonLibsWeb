@@ -14,6 +14,7 @@ from web.tools.load_data_tools import (
     load_study_plans,
 )
 from web.tools.parsing_tools import parse_html_table
+from web.tools.serializing_tools import disciplines_to_json
 from web.tools.web_tools import (
     begin_connection,
     end_connection,
@@ -39,7 +40,7 @@ def main_view(request):
         "failure": False,
         "data": [],
     }
-    if request.method == 'POST':
+    if request.method == "POST":
         post_data = request.POST
         study_plan = StudyPlan.objects.filter(name=post_data["study_plan"], is_active=True)
         if not study_plan.exists():
@@ -52,48 +53,7 @@ def main_view(request):
             context["failure"] = True
             return render(request, "main.html", context)
 
-        courses = disciplines.order_by("course").values_list("course", flat=True).distinct()
-        data_by_course = []
-        for course in courses:
-            disciplines_by_course = disciplines.filter(course=course)
-            data = {"ordinary": [], "by_choice": []}
-            by_choice = disciplines_by_course.filter(by_choice=True)
-            ordinary = disciplines_by_course.exclude(id__in=by_choice.values("id"))
-            if ordinary.exists():
-                for discipline in ordinary:
-                    data["ordinary"].append({
-                        "code": discipline.code,
-                        "name": discipline.discipline.name,
-                        "course": discipline.course,
-                        "semester": discipline.semester,
-                        "exam": discipline.exam,
-                        "test": discipline.test,
-                        "lecture": discipline.lecture,
-                        "practice": discipline.practice,
-                        "lab": discipline.lab,
-                    })
-
-            if by_choice.exists():
-                main_by_choice = by_choice.filter(discipline__name__contains="по выбору ")
-                for discipline in main_by_choice:
-                    another_disciplines = by_choice.filter(code__startswith=discipline.code)
-                    data["by_choice"].append({
-                        "code": discipline.code,
-                        "name": discipline.discipline.name,
-                        "course": discipline.course,
-                        "semester": discipline.semester,
-                        "exam": discipline.exam,
-                        "test": discipline.test,
-                        "lecture": discipline.lecture,
-                        "practice": discipline.practice,
-                        "lab": discipline.lab,
-                        "disciplines": []
-                    })
-
-                    for another_discipline in another_disciplines:
-                        data["by_choice"][-1]["disciplines"].append(another_discipline.discipline.name)
-            data_by_course.append({"course": course, "disciplines": data})
-        context["data"] = data_by_course
+        context["data"] = disciplines_to_json(disciplines)
 
     return render(request, "main.html", context=context)
 
@@ -109,7 +69,10 @@ def registration_view(request):
             )
             user.set_password(form.cleaned_data["password"])
             user.save()
-            user = authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password"])
+            user = authenticate(
+                username=form.cleaned_data["username"],
+                password=form.cleaned_data["password"],
+            )
             login(request, user)
             return redirect("main")
     return render(
