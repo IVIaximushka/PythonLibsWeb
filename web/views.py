@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from web.forms import AuthenticationForm, RegistrationForm
-from web.models import Institute, Speciality, StudyPlan, User
+from web.models import Institute, Speciality, StudyPlan, User, StudyPlanDiscipline
 from web.tools.load_data_tools import (
     deactivate,
     load_disciplines,
@@ -14,6 +14,7 @@ from web.tools.load_data_tools import (
     load_study_plans,
 )
 from web.tools.parsing_tools import parse_html_table
+from web.tools.serializing_tools import disciplines_to_json
 from web.tools.web_tools import (
     begin_connection,
     end_connection,
@@ -32,7 +33,29 @@ from web.tools.web_tools import (
 
 @login_required(login_url="/authentication")
 def main_view(request):
-    return render(request, "main.html")
+    context = {
+        "institutes": Institute.objects.filter(is_active=True),
+        "specialities": Speciality.objects.filter(is_active=True),
+        "study_plans": StudyPlan.objects.filter(is_active=True),
+        "failure": False,
+        "data": [],
+    }
+    if request.method == "POST":
+        post_data = request.POST
+        study_plan = StudyPlan.objects.filter(name=post_data["study_plan"], is_active=True)
+        if not study_plan.exists():
+            context["failure"] = True
+            return render(request, "main.html", context)
+
+        study_plan = study_plan.first()
+        disciplines = StudyPlanDiscipline.objects.filter(study_plan=study_plan, is_active=True)
+        if not disciplines.exists():
+            context["failure"] = True
+            return render(request, "main.html", context)
+
+        context["data"] = disciplines_to_json(disciplines)
+
+    return render(request, "main.html", context=context)
 
 
 def registration_view(request):
@@ -46,7 +69,10 @@ def registration_view(request):
             )
             user.set_password(form.cleaned_data["password"])
             user.save()
-            user = authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password"])
+            user = authenticate(
+                username=form.cleaned_data["username"],
+                password=form.cleaned_data["password"],
+            )
             login(request, user)
             return redirect("main")
     return render(
@@ -76,6 +102,8 @@ def logout_view(request):
 
 @login_required(login_url="/authentication/")
 def update_data_view(request):
+    if not request.user.is_superuser:
+        return redirect("main")
     try:
         driver = begin_connection()
         faculties = get_faculties(driver)

@@ -25,12 +25,12 @@ class StudyPlan(models.Model):
 class Discipline(models.Model):
     name = models.CharField(max_length=200)
     is_active = models.BooleanField(default=True)
-    code = models.CharField(max_length=100)
 
 
 class StudyPlanDiscipline(models.Model):
     is_active = models.BooleanField(default=True)
     course = models.SmallIntegerField()
+    code = models.CharField(max_length=100)
     semester = models.SmallIntegerField()
     exam = models.BooleanField()
     test = models.BooleanField()

@@ -40,7 +40,7 @@ def load_study_plans(speciality: Speciality, study_plans: list[str]) -> None:
 
 def _save_discipline(study_plan: StudyPlan, discipline: pd.Series, course: int, semester, by_choice) -> None:
     string_semester = "first" if semester == 1 else "second"
-    disc, created = Discipline.objects.get_or_create(name=discipline["name"], code=discipline["id"])
+    disc, created = Discipline.objects.get_or_create(name=discipline["name"])
     if not created:
         disc.is_active = True
         disc.save()
@@ -48,6 +48,7 @@ def _save_discipline(study_plan: StudyPlan, discipline: pd.Series, course: int, 
     st_plan_disc, created = StudyPlanDiscipline.objects.get_or_create(
         course=course,
         semester=semester,
+        code=discipline["id"],
         exam=(discipline[f"{string_semester}_ex"] == "+"),
         test=(discipline[f"{string_semester}_test"] == "+"),
         lecture=int(discipline[f"{string_semester}_lec"]),
