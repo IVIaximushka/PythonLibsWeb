@@ -1,0 +1,60 @@
+.site-top {
+    background-color: #0b97c4;
+    min-height: 60px;
+}
+
+.flex-container{
+    padding-top: 10px;
+    display: flex;
+    flex-flow: row;
+    flex-direction: row;
+}
+
+.container{
+    width:100%;
+    min-height: 50px;
+}
+
+.button{
+    background-color: #04617F;
+    text-align: center;
+    color:white;
+    font-size: 20px;
+    height: 80%;
+    margin-right: 20px;
+    border-radius: 10px;
+    padding: 5px 10px 5px 10px;
+}
+
+a{
+    color:white;
+    text-align: center;
+    text-decoration: none;
+}
+
+.icon{
+    height: 50px;
+    width: 50px;
+    margin: 0 20px 0 10px;
+    border-radius: 2px;
+}
+.head{
+    color: white;
+    font-family: fantasy;
+    font-size: 35px;
+}
+
+.head2{
+    padding-top: 5px;
+    margin-left: 20px;
+    color: white;
+    font-family: fantasy;
+    font-size: 30px;
+}
+
+.username{
+    font-family: Sans-Serif;
+    font-size: 15px;
+    color: white;
+    margin: 10px 10px 0 0;
+}
