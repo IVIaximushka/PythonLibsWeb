@@ -1,10 +1,13 @@
+:root {
+  --color-primary: #0b97c4;
+}
 .site-top{
-    background-color: #0b97c4;
+    background-color: var(--color-primary);
     min-height: 60px;
 }
 
 .site-bottom{
-    background-color: #0b97c4;
+    background-color: var(--color-primary);
     min-height: 60px;
     padding-top: 20px;
     display: flex;
@@ -24,7 +27,7 @@
 .auth-form{
     margin: 20vh 0 0 0;
     padding: 1vh 5vh 5vh 5vh;
-    background-color: #0b97c4;
+    background-color: var(--color-primary);
     border: groove #2e6da4;
     border-radius: 10px;
     width: 50vh;
@@ -37,7 +40,7 @@
 .reg-form{
     margin: 10vh 0 0 0;
     padding: 1vh 5vh 5vh 5vh;
-    background-color: #0b97c4;
+    background-color: var(--color-primary);
     border: groove #2e6da4;
     border-radius: 10px;
     width: 50vh;
@@ -52,6 +55,12 @@
     display: flex;
     flex-flow: row;
     flex-direction: row;
+}
+
+.flex-container-column{
+    display: flex;
+    flex-flow: column;
+    flex-direction: column;
 }
 
 .container{
@@ -114,6 +123,7 @@ a{
     margin: 0 20px 0 10px;
     border-radius: 2px;
 }
+
 .head{
     color: white;
     font-family: fantasy;
@@ -128,9 +138,21 @@ a{
     font-size: 30px;
 }
 
+
 .username{
     font-family: Sans-Serif;
     font-size: 15px;
     color: white;
     margin: 10px 10px 0 0;
+}
+
+.table-strip>tbody>tr:nth-child(odd){
+    background-color: #42BAE2;
+}
+
+.table2{
+    width:49vw;
+    border: groove #22a7d2;
+    border-radius: 10px;
+    margin-left: 0.45vw;
 }

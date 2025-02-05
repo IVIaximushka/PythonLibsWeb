@@ -29,71 +29,101 @@
     {% endif %}
     {% if data|length > 0 %}
         {% for course in data %}
-        	<p>{{ course.course }} курс</p>
-
-        	<p>1 семестр</p>
-
-            <ul>
-                {% for discipline in course.disciplines.ordinary %}
-                    {% if discipline.semester == 1 %}
-                        <li>
-                            {{ discipline.name }}
-                            Экзамен {% if discipline.exam %}+{% else %}-{% endif %}
-                            Зачёт {% if discipline.test %}+{% else %}-{% endif %}
-                            {{ discipline.lecture }}/{{ discipline.practice }}/{{ discipline.lab }}
-                        </li>
-                    {% endif %}
-                {% endfor %}
-                {% for discipline in course.disciplines.by_choice %}
-                    {% if discipline.semester == 1 %}
-                        <li>
-                            {{ discipline.name }}
-                            Экзамен {% if discipline.exam %}+{% else %}-{% endif %}
-                            Зачёт {% if discipline.test %}+{% else %}-{% endif %}
-                            {{ discipline.lecture }}/{{ discipline.practice }}/{{ discipline.lab }}
-                            <ol>
-                                {% for discipline_by_choice in discipline.disciplines %}
-                                	<li>
-                                        {{ discipline_by_choice }}
-                                    </li>
+            <p>{{ course.course }} курс</p>
+            <div class="flex-container">
+                <div class="flex-container-column">
+                    <p>1 семестр</p>
+                    <table class="table table-strip table-advance table-hover table2">
+                        <tbody>
+                            <tr>
+                                <th>Название дисциплины</th>
+                                <th>Экзамены</th>
+                                <th>Зачеты</th>
+                                <th>Лекционных</th>
+                                <th>Практических</th>
+                                <th>Лабораторных</th>
+                            </tr>
+                            {% for discipline in course.disciplines.ordinary %}
+                                {% if discipline.semester == 1 %}
+                                    <tr>
+                                        <td>{{ discipline.name }}</td>
+                                        <td>{% if discipline.exam %}+{% else %}-{% endif %}</td>
+                                        <td>{% if discipline.test %}+{% else %}-{% endif %}</td>
+                                        <td>{{ discipline.lecture }}</td>
+                                        <td>{{ discipline.practice }}</td>
+                                        <td>{{ discipline.lab }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                                {% for discipline in course.disciplines.by_choice %}
+                                    {% if discipline.semester == 1 %}
+                                        <tr>
+                                            <td>{{ discipline.name }}</td>
+                                            <td>{% if discipline.exam %}+{% else %}-{% endif %}</td>
+                                            <td>{% if discipline.test %}+{% else %}-{% endif %}</td>
+                                            <td>{{ discipline.lecture }}</td>
+                                            <td>{{ discipline.practice }}</td>
+                                            <td>{{ discipline.lab }}</td>
+                                        </tr>
+                                        {% for discipline_by_choice in discipline.disciplines %}
+                                        <tr>
+                                            <td style="padding-left: 2vw" colspan="6">
+                                                {{ discipline_by_choice }}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% endif %}
                                 {% endfor %}
-                            </ol>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-
-            <p>2 семестр</p>
-
-            <ul>
-                {% for discipline in course.disciplines.ordinary %}
-                    {% if discipline.semester == 2 %}
-                        <li>
-                            {{ discipline.name }}
-                            Экзамен {% if discipline.exam %}+{% else %}-{% endif %}
-                            Зачёт {% if discipline.test %}+{% else %}-{% endif %}
-                            {{ discipline.lecture }}/{{ discipline.practice }}/{{ discipline.lab }}
-                        </li>
-                    {% endif %}
-                {% endfor %}
-                {% for discipline in course.disciplines.by_choice %}
-                    {% if discipline.semester == 2 %}
-                        <li>
-                            {{ discipline.name }}
-                            Экзамен {% if discipline.exam %}+{% else %}-{% endif %}
-                            Зачёт {% if discipline.test %}+{% else %}-{% endif %}
-                            {{ discipline.lecture }}/{{ discipline.practice }}/{{ discipline.lab }}
-                            <ol>
-                                {% for discipline_by_choice in discipline.disciplines %}
-                                	<li>
-                                        {{ discipline_by_choice }}
-                                    </li>
+                            </tbody>
+                        </table>
+                </div>
+                <div class="flex-container-column">
+                    <p>2 семестр</p>
+                    <table class="table table-strip table-advance table-hover table2">
+                        <tbody>
+                            <tr>
+                                <th>Название дисциплины</th>
+                                <th>Экзамены</th>
+                                <th>Зачеты</th>
+                                <th>Лекционных</th>
+                                <th>Практических</th>
+                                <th>Лабораторных</th>
+                            </tr>
+                            {% for discipline in course.disciplines.ordinary %}
+                                {% if discipline.semester == 2 %}
+                                    <tr>
+                                        <td>{{ discipline.name }}</td>
+                                        <td>{% if discipline.exam %}+{% else %}-{% endif %}</td>
+                                        <td>{% if discipline.test %}+{% else %}-{% endif %}</td>
+                                        <td>{{ discipline.lecture }}</td>
+                                        <td>{{ discipline.practice }}</td>
+                                        <td>{{ discipline.lab }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                                {% for discipline in course.disciplines.by_choice %}
+                                    {% if discipline.semester == 2 %}
+                                        <tr>
+                                            <td>{{ discipline.name }}</td>
+                                            <td>{% if discipline.exam %}+{% else %}-{% endif %}</td>
+                                            <td>{% if discipline.test %}+{% else %}-{% endif %}</td>
+                                            <td>{{ discipline.lecture }}</td>
+                                            <td>{{ discipline.practice }}</td>
+                                            <td>{{ discipline.lab }}</td>
+                                        </tr>
+                                        {% for discipline_by_choice in discipline.disciplines %}
+                                        <tr>
+                                            <td style="padding-left: 2vw" colspan="6">
+                                                {{ discipline_by_choice }}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% endif %}
                                 {% endfor %}
-                            </ol>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
         {% endfor %}
     {% endif %}
 
