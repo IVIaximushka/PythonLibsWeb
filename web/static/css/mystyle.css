@@ -14,6 +14,26 @@
     font-family: fantasy;
 }
 
+.form-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 81vh;
+}
+
+.auth-form{
+    margin: 20vh 0 0 0;
+    padding: 1vh 5vh 5vh 5vh;
+    background-color: #0b97c4;
+    border: groove #2e6da4;
+    border-radius: 10px;
+    width: 50vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
 .flex-container{
     padding-top: 10px;
     display: flex;
@@ -35,6 +55,38 @@
     margin-right: 20px;
     border-radius: 10px;
     padding: 5px 10px 5px 10px;
+}
+
+.button2{
+    background-color: #04617F;
+    text-align: center;
+    color:white;
+    font-size: 20px;
+    height: 7vh;
+    border-radius: 10px;
+    margin-top: 5vh;
+    padding: 1vh 4vh 1vh 4vh;
+}
+
+form{
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+}
+
+p{
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+}
+
+input{
+    border-radius: 5px;
+}
+
+label{
+    display: inline-block;
+    width: 100%;
 }
 
 a{
