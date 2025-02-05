@@ -107,12 +107,7 @@ def update_data_view(request):
     try:
         driver = begin_connection()
         faculties = get_faculties(driver)
-    except Exception as error:
-        logging.error(error)
-        return redirect("main")
-
-    deactivate()
-    try:
+        deactivate()
         load_faculties(faculties)
     except Exception as error:
         logging.error(error)

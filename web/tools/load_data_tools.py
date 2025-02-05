@@ -74,7 +74,7 @@ def load_disciplines(study_plan: StudyPlan, data: pd.DataFrame, course: int) -> 
     disciplines = data.copy()
     disciplines = disciplines[disciplines["id"].notna()]
     by_choice = data[data["name"].str.contains("по выбору ", case=False)]
-    for index, discipline in by_choice.iterrows():
+    for _, discipline in by_choice.iterrows():
         _save_discipline_by_semester(study_plan, discipline, course, by_choice=True)
         disciplines_by_choice = data[
             data["id"].notna()
@@ -82,10 +82,10 @@ def load_disciplines(study_plan: StudyPlan, data: pd.DataFrame, course: int) -> 
             & (data["id"] != discipline["id"])
         ]
 
-        for index_by_choice, discipline_by_choice in disciplines_by_choice.iterrows():
+        for _, discipline_by_choice in disciplines_by_choice.iterrows():
             _save_discipline_by_semester(study_plan, discipline_by_choice, course, by_choice=True)
 
         disciplines = disciplines[~(disciplines["id"].str.contains(discipline["id"]))]
 
-    for index, discipline in disciplines.iterrows():
+    for _, discipline in disciplines.iterrows():
         _save_discipline_by_semester(study_plan, discipline, course)
