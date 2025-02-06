@@ -35,15 +35,15 @@ def _add_diagram_data(discipline: StudyPlanDiscipline, data: list) -> None:
     )
 
 
-def _add_diagram(diagram_data: list[tuple], semester: int):
+def _get_filtered_data(data: list[tuple], semester: int) -> list[tuple]:
     filtered_and_sorted_data = sorted(
-        filter(lambda discipline: discipline[2] == semester, diagram_data),
+        filter(lambda discipline: discipline[2] == semester, data),
         key=lambda discipline: discipline[1],
     )
-    plt.barh(
-        [i[0] for i in filtered_and_sorted_data],
-        [i[1] for i in filtered_and_sorted_data],
-    )
+    return filtered_and_sorted_data
+
+
+def _build_diagram():
     fig = plt.gcf()
     buf = io.BytesIO()
     fig.savefig(buf, format="png")
@@ -52,6 +52,28 @@ def _add_diagram(diagram_data: list[tuple], semester: int):
     graphic = graphic.decode("utf-8")
     plt.clf()
     return graphic
+
+
+def _add_diagram(diagram_data: list[tuple], semester: int):
+    filtered_and_sorted_data = _get_filtered_data(diagram_data, semester)
+    if sum(map(lambda discipline: discipline[1], filtered_and_sorted_data)) != 0:
+        plt.barh(
+            [i[0] for i in filtered_and_sorted_data],
+            [i[1] for i in filtered_and_sorted_data],
+        )
+        return _build_diagram()
+    return None
+
+
+def _add_pie_diagram(diagram_data: list[tuple], semester: int):
+    filtered_and_sorted_data = _get_filtered_data(diagram_data, semester)
+    if sum(map(lambda discipline: discipline[1], filtered_and_sorted_data)) != 0:
+        plt.pie(
+            [i[1] for i in filtered_and_sorted_data],
+            labels=[i[0] for i in filtered_and_sorted_data],
+        )
+        return _build_diagram()
+    return None
 
 
 def disciplines_to_json(disciplines: QuerySet) -> list[dict]:
@@ -85,6 +107,8 @@ def disciplines_to_json(disciplines: QuerySet) -> list[dict]:
                 "disciplines": data,
                 "first_semester_diagram": _add_diagram(diagram_data, 1),
                 "second_semester_diagram": _add_diagram(diagram_data, 2),
+                "first_semester_pie": _add_pie_diagram(diagram_data, 1),
+                "second_semester_pie": _add_pie_diagram(diagram_data, 2),
             }
         )
         plt.close()
