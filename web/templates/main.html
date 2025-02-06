@@ -77,6 +77,7 @@
                             </tbody>
                         </table>
                 </div>
+                <img src="data:image/png;base64,{{ course.first_semester_diagram|safe }}" alt="">
                 <div class="flex-container-column">
                     <p>2 семестр</p>
                     <table class="table table-strip table-advance table-hover table2">
@@ -123,6 +124,7 @@
                             </tbody>
                         </table>
                 </div>
+                <img src="data:image/png;base64,{{ course.second_semester_diagram|safe }}" alt="">
             </div>
         {% endfor %}
     {% endif %}
