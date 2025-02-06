@@ -2,9 +2,11 @@ import base64
 import io
 
 from django.db.models import QuerySet
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt, use
 
 from web.models import StudyPlanDiscipline
+
+use("agg")
 
 
 def _add_discipline(discipline: StudyPlanDiscipline, data: list):
@@ -34,7 +36,6 @@ def _add_diagram_data(discipline: StudyPlanDiscipline, data: list) -> None:
 
 
 def _add_diagram(diagram_data: list[tuple], semester: int):
-    plt.cla()
     filtered_and_sorted_data = sorted(
         filter(lambda discipline: discipline[2] == semester, diagram_data),
         key=lambda discipline: discipline[1],
@@ -49,6 +50,7 @@ def _add_diagram(diagram_data: list[tuple], semester: int):
     buf.seek(0)
     graphic = base64.b64encode(buf.read())
     graphic = graphic.decode("utf-8")
+    plt.clf()
     return graphic
 
 
