@@ -1,28 +1,44 @@
 {% extends 'base.html' %}
 {% block content %}
+    {% if data|length > 0 %}
+<div id="wrapper" class="form-wrapper2" style="height: 61vh" id="main-wrapper">
+{% else%}
+<div id="wrapper" class="form-wrapper2" style="height: 81vh" id="main-wrapper">
+{% endif%}
     {% if user.is_superuser %}
-        <button onclick="location.href='{% url 'update' %}'">Обновить данные</button>
+        <button class="button" style="height: 5vh; margin-top: 1vh" onclick="location.href='{% url 'update' %}'">Обновить данные</button>
     {% endif %}
-
+<div class="main-form-container">
     <form action="" method="post">
         {% csrf_token %}
-        <select id="institute" name="institute" onchange="changeInstitute()">
-            <option value=""></option>
-            {% for institute in institutes %}
-                <option value="{{ institute.name }}">{{ institute.name }}</option>
-            {% endfor %}
-        </select>
+            <span class="main-form-field">Выберете институт</span>
+        <div>
+            <select class="select" id="institute" name="institute" onchange="changeInstitute()">
+                <option class="select" value=""></option>
+                {% for institute in institutes %}
+                    <option value="{{ institute.name }}">{{ institute.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-        <select id="speciality" name="speciality" onchange="changeSpeciality()" style="display: none">
-            <option value=""></option>
-        </select>
+            <span id="spec" class="main-form-field" style="display: none">Выберете направление</span>
+        <div>
+            <select class="select" id="speciality" name="speciality" onchange="changeSpeciality()" style="display: none">
+                <option value=""></option>
+            </select>
+        </div>
 
-        <select id="study_plan" name="study_plan" onchange="changeStudyPlan()" style="display: none">
-            <option value=""></option>
-        </select>
+            <span id="plan" class="main-form-field" style="display: none">Выберете курс</span>
+        <div>
+            <select class="select" id="study_plan" name="study_plan" onchange="changeStudyPlan()" style="display: none">
+                <option value=""></option>
+            </select>
+        </div>
 
-        <input id="get_study_plans" type="submit" value="Показать учбеные планы" style="display: none">
+        <input id="get_study_plans" class="button" style="height: 5vh; margin: 10vh 0 2vh 0;display: none " type="submit" value="Показать учбеные планы" >
     </form>
+    </div>
+</div>
 
     {% if failure %}
         Что-то пошло не так, попробуйте выбрать другой план
@@ -80,49 +96,7 @@
                 <img src="data:image/png;base64,{{ course.first_semester_diagram|safe }}" alt="">
                 <div class="flex-container-column">
                     <p>2 семестр</p>
-                    <table class="table table-strip table-advance table-hover table2">
-                        <tbody>
-                            <tr>
-                                <th>Название дисциплины</th>
-                                <th>Экзамены</th>
-                                <th>Зачеты</th>
-                                <th>Лекционных</th>
-                                <th>Практических</th>
-                                <th>Лабораторных</th>
-                            </tr>
-                            {% for discipline in course.disciplines.ordinary %}
-                                {% if discipline.semester == 2 %}
-                                    <tr>
-                                        <td>{{ discipline.name }}</td>
-                                        <td>{% if discipline.exam %}+{% else %}-{% endif %}</td>
-                                        <td>{% if discipline.test %}+{% else %}-{% endif %}</td>
-                                        <td>{{ discipline.lecture }}</td>
-                                        <td>{{ discipline.practice }}</td>
-                                        <td>{{ discipline.lab }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                                {% for discipline in course.disciplines.by_choice %}
-                                    {% if discipline.semester == 2 %}
-                                        <tr>
-                                            <td>{{ discipline.name }}</td>
-                                            <td>{% if discipline.exam %}+{% else %}-{% endif %}</td>
-                                            <td>{% if discipline.test %}+{% else %}-{% endif %}</td>
-                                            <td>{{ discipline.lecture }}</td>
-                                            <td>{{ discipline.practice }}</td>
-                                            <td>{{ discipline.lab }}</td>
-                                        </tr>
-                                        {% for discipline_by_choice in discipline.disciplines %}
-                                        <tr>
-                                            <td style="padding-left: 2vw" colspan="6">
-                                                {{ discipline_by_choice }}
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endfor %}
-                            </tbody>
-                        </table>
+
                 </div>
                 <img src="data:image/png;base64,{{ course.second_semester_diagram|safe }}" alt="">
             </div>
@@ -132,12 +106,14 @@
     <script>
         function changeInstitute() {
             institute = document.getElementById('institute');
+            spec = document.getElementById('spec')
             speciality = document.getElementById('speciality');
             studyPlan = document.getElementById('study_plan');
             button = document.getElementById('get_study_plans');
             speciality.options.length = 1;
             if (institute.options[institute.selectedIndex].value !== "")
             {
+                spec.style.display = "inline";
                 speciality.style.display = "inline";
                 {% for speciality in specialities %}
                     if (institute.options[institute.selectedIndex].value === '{{ speciality.institute.name }}')
@@ -145,10 +121,10 @@
                         var oOption = document.createElement("option");
                         oOption.value = '{{ speciality.name }}';
                         oOption.text = '{{ speciality.name }}';
+                        oOption.className ='select';
                         speciality.append(oOption);
                     }
                 {% endfor %}
-                console.log(2);
             }
             else
             {
@@ -160,12 +136,14 @@
     </script>
     <script>
         function changeSpeciality() {
-            speciality = document.getElementById('speciality');
-            studyPlan = document.getElementById('study_plan');
-            button = document.getElementById('get_study_plans');
+            const speciality = document.getElementById('speciality');
+            const plan = document.getElementById('plan');
+            const studyPlan = document.getElementById('study_plan');
+            const button = document.getElementById('get_study_plans');
             studyPlan.options.length = 1;
             if (speciality.options[speciality.selectedIndex].value !== "")
             {
+                plan.style.display = "inline";
                 studyPlan.style.display = "inline";
                 {% for study_plan in study_plans %}
                     if (speciality.options[speciality.selectedIndex].value === '{{ study_plan.speciality.name }}')
@@ -173,10 +151,10 @@
                         var oOption = document.createElement("option");
                         oOption.value = '{{ study_plan.name }}';
                         oOption.text = '{{ study_plan.name }}';
+                        oOption.className ='select';
                         studyPlan.append(oOption);
                     }
                 {% endfor %}
-                console.log(3);
             }
             else
                 studyPlan.style.display = "none";
@@ -185,15 +163,19 @@
     </script>
     <script>
         function changeStudyPlan() {
-            studyPlan = document.getElementById('study_plan')
-            button = document.getElementById('get_study_plans');
+            const studyPlan = document.getElementById('study_plan')
+            const button = document.getElementById('get_study_plans');
+            const wrapper = document.getElementById('wrapper');
             if (studyPlan.options[studyPlan.selectedIndex].value !== "")
             {
                 button.style.display = "inline";
-                console.log(4);
             }
-            else
+            else {
                 button.style.display = "none";
+            }
         }
     </script>
+<script>
+
+</script>
 {% endblock %}

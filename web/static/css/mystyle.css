@@ -1,6 +1,8 @@
 :root {
   --color-primary: #0b97c4;
+    --color-secondary: #2e6da4;
 }
+
 .site-top{
     background-color: var(--color-primary);
     min-height: 60px;
@@ -15,6 +17,8 @@
     flex-direction: column;
     color: white;
     font-family: fantasy;
+    bottom: 0;
+    position: relative;
 }
 
 .form-wrapper{
@@ -24,11 +28,17 @@
     height: 81vh;
 }
 
+.form-wrapper2{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .auth-form{
     margin: 20vh 0 0 0;
     padding: 1vh 5vh 5vh 5vh;
     background-color: var(--color-primary);
-    border: groove #2e6da4;
+    border: groove var(--color-secondary);
     border-radius: 10px;
     width: 50vh;
     color: white;
@@ -62,6 +72,31 @@
     flex-flow: column;
     flex-direction: column;
 }
+
+/*main form ------------------*/
+
+.main-form-container{
+    width: 40vw;
+    min-height: 10vh;
+    background-color: var(--color-primary);
+    border-radius: 2vh;
+    margin-top: 2vh;
+    padding: 2vh 0 4vh;
+    display: flex;
+    flex-flow: column;
+    flex-direction: column;
+}
+
+.main-form-field{
+    margin-top: 4vh;
+    color:white;
+}
+
+.select{
+    border-radius: 5vh;
+}
+
+/*main form ------------------*/
 
 .container{
     width:100%;
