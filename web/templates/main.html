@@ -81,9 +81,16 @@
         Что-то пошло не так, попробуйте выбрать другой план
     {% endif %}
     {% if data|length > 0 %}
+        <div class="flex-container" style="padding-left: 31.5vw">
         {% for course in data %}
-            <p>{{ course.course }} курс</p>
-            <div class="flex-container">
+
+
+            <button id="button-{{course.course}}" class="course-title">{{ course.course }} курс</button>
+        {% endfor %}
+        </div>
+
+        {% for course in data %}
+            <div id="course-{{course.course}}" class="flex-container course" style="display: none">
                 <div class="flex-container-column">
                     <p>1 семестр</p>
                     <table class="table table-strip table-advance table-hover table2">
@@ -266,6 +273,41 @@
         }
     </script>
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const toggleButtons = document.querySelectorAll('.course-title');
+    const contents = document.querySelectorAll('.course');
 
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const courseId = this.id.split('-')[1]; // Получаем часть id после "course-"
+            const content = document.getElementById(`course-${courseId}`);
+
+            if (content.style.display === "none") {
+                content.style.display = "block";
+                content.style.maxHeight = content.scrollHeight + "px";
+                this.style.backgroundColor = "#0b97c4";
+            } else {
+                this.style.backgroundColor = "#04617F";
+                content.style.maxHeight = null; // Скрываем с анимацией
+                setTimeout(() => {
+                    content.style.display = "none"; // Скрываем контент после окончания анимации
+                }, 300); // Длительность анимации
+            }
+            contents.forEach(content => {
+                const courseId = this.id.split('-')[1];
+                if(content.id.split('-')[1] != courseId){
+                    const buttonChange = document.getElementById('button-'+content.id.split('-')[1])
+                    content.style.maxHeight = null; // Скрываем с анимацией
+                    buttonChange.style.backgroundColor = "#04617F";
+                    setTimeout(() => {
+                        content.style.display = "none"; // Скрываем контент после окончания анимации
+                    }, 300); // Длительность анимации
+                }
+            });
+
+        });
+    });
+
+});
 </script>
 {% endblock %}

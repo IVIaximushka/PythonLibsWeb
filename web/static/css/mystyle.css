@@ -193,3 +193,16 @@ a{
     margin-left: 0.45vw;
     font-family: Sans-Serif, serif;
 }
+
+.course-title{
+    background-color: #04617F;
+    text-align: center;
+    color:white;
+    font-size: 20px;
+    height: 7vh;
+    border-radius: 10px;
+    margin-top: 2vh;
+    margin-right: 5vh;
+    margin-bottom: 9.51vh;
+    padding: 1vh 4vh 1vh 4vh;
+}
