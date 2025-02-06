@@ -129,30 +129,74 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                </div>
                 {% if course.first_semester_diagram is not None %}
-                    <img src="data:image/png;base64,{{ course.first_semester_diagram|safe }}" alt="">
                     <img src="data:image/png;base64,{{ course.first_semester_pie|safe }}" alt="">
+                    <img src="data:image/png;base64,{{ course.first_semester_diagram|safe }}" alt="">
                 {% endif %}
+                </div>
                 <div class="flex-container-column">
                     <p>2 семестр</p>
+                    <table class="table table-strip table-advance table-hover table2">
+                        <tbody>
+                            <tr>
+                                <th>Название дисциплины</th>
+                                <th>Экзамены</th>
+                                <th>Зачеты</th>
+                                <th>Лекционных</th>
+                                <th>Практических</th>
+                                <th>Лабораторных</th>
+                            </tr>
+                            {% for discipline in course.disciplines.ordinary %}
+                                {% if discipline.semester == 2 %}
+                                    <tr>
+                                        <td>{{ discipline.name }}</td>
+                                        <td>{% if discipline.exam %}+{% else %}-{% endif %}</td>
+                                        <td>{% if discipline.test %}+{% else %}-{% endif %}</td>
+                                        <td>{{ discipline.lecture }}</td>
+                                        <td>{{ discipline.practice }}</td>
+                                        <td>{{ discipline.lab }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            {% for discipline in course.disciplines.by_choice %}
+                                {% if discipline.semester == 2 %}
+                                    <tr>
+                                        <td>{{ discipline.name }}</td>
+                                        <td>{% if discipline.exam %}+{% else %}-{% endif %}</td>
+                                        <td>{% if discipline.test %}+{% else %}-{% endif %}</td>
+                                        <td>{{ discipline.lecture }}</td>
+                                        <td>{{ discipline.practice }}</td>
+                                        <td>{{ discipline.lab }}</td>
+                                    </tr>
+                                    {% for discipline_by_choice in discipline.disciplines %}
+                                    <tr>
+                                        <td style="padding-left: 2vw" colspan="6">
+                                            {{ discipline_by_choice }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
 
-                </div>
                 {% if course.second_semester_diagram is not None %}
-                    <img src="data:image/png;base64,{{ course.second_semester_diagram|safe }}" alt="">
                     <img src="data:image/png;base64,{{ course.second_semester_pie|safe }}" alt="">
+                    <img src="data:image/png;base64,{{ course.second_semester_diagram|safe }}" alt="">
                 {% endif %}
+                </div>
             </div>
         {% endfor %}
     {% endif %}
 
     <script>
         function changeInstitute() {
-            institute = document.getElementById('institute');
-            spec = document.getElementById('spec')
-            speciality = document.getElementById('speciality');
-            studyPlan = document.getElementById('study_plan');
-            button = document.getElementById('get_study_plans');
+            const institute = document.getElementById('institute');
+            const spec = document.getElementById('spec')
+            const speciality = document.getElementById('speciality');
+            const studyPlan = document.getElementById('study_plan');
+            const button = document.getElementById('get_study_plans');
+            const plan = document.getElementById('plan');
             speciality.options.length = 1;
             if (institute.options[institute.selectedIndex].value !== "")
             {
@@ -171,9 +215,11 @@
             }
             else
             {
-                {#speciality.style.display = "none";#}
-                {#studyPlan.style.display = "none";#}
-                {#button.style.display = "none";#}
+                speciality.style.display = "none";
+                studyPlan.style.display = "none";
+                button.style.display = "none";
+                spec.style.display = "none";
+                plan.style.display = "none";
             }
         }
     </script>
@@ -200,8 +246,9 @@
                 {% endfor %}
             }
             else {
-                {#studyPlan.style.display = "none";#}
-                {#button.style.display = "none";#}
+                studyPlan.style.display = "none";
+                plan.style.display = "none";
+                button.style.display = "none";
             }
         }
     </script>
@@ -209,13 +256,12 @@
         function changeStudyPlan() {
             const studyPlan = document.getElementById('study_plan')
             const button = document.getElementById('get_study_plans');
-            const wrapper = document.getElementById('wrapper');
             if (studyPlan.options[studyPlan.selectedIndex].value !== "")
             {
                 button.style.display = "inline";
             }
             else {
-                {#button.style.display = "none";#}
+                button.style.display = "none";
             }
         }
     </script>

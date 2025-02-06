@@ -46,7 +46,7 @@ def _get_filtered_data(data: list[tuple], semester: int) -> list[tuple]:
 def _build_diagram():
     fig = plt.gcf()
     buf = io.BytesIO()
-    fig.savefig(buf, format="png")
+    fig.savefig(buf, format="png", bbox_inches="tight")
     buf.seek(0)
     graphic = base64.b64encode(buf.read())
     graphic = graphic.decode("utf-8")
