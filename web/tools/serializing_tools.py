@@ -24,21 +24,31 @@ def _add_discipline(discipline: StudyPlanDiscipline, data: list):
 
 
 def _add_diagram_data(discipline: StudyPlanDiscipline, data: list) -> None:
-    data.append((discipline.discipline.name, discipline.lecture + discipline.practice + discipline.lab, discipline.semester))
+    data.append(
+        (
+            discipline.discipline.name,
+            discipline.lecture + discipline.practice + discipline.lab,
+            discipline.semester,
+        )
+    )
 
 
 def _add_diagram(diagram_data: list[tuple], semester: int):
     plt.cla()
-    filtered_and_sorted_data = sorted(filter(lambda discipline: discipline[2] == semester, diagram_data),
-                                      key=lambda discipline: discipline[1])
-    plt.barh([i[0] for i in filtered_and_sorted_data],
-            [i[1] for i in filtered_and_sorted_data])
+    filtered_and_sorted_data = sorted(
+        filter(lambda discipline: discipline[2] == semester, diagram_data),
+        key=lambda discipline: discipline[1],
+    )
+    plt.barh(
+        [i[0] for i in filtered_and_sorted_data],
+        [i[1] for i in filtered_and_sorted_data],
+    )
     fig = plt.gcf()
     buf = io.BytesIO()
-    fig.savefig(buf, format='png')
+    fig.savefig(buf, format="png")
     buf.seek(0)
     graphic = base64.b64encode(buf.read())
-    graphic = graphic.decode('utf-8')
+    graphic = graphic.decode("utf-8")
     return graphic
 
 
@@ -67,9 +77,13 @@ def disciplines_to_json(disciplines: QuerySet) -> list[dict]:
                 for another_discipline in another_disciplines:
                     data["by_choice"][-1]["disciplines"].append(another_discipline.discipline.name)
 
-        data_by_course.append({"course": course,
-                               "disciplines": data,
-                               'first_semester_diagram': _add_diagram(diagram_data, 1),
-                               'second_semester_diagram': _add_diagram(diagram_data, 2),})
+        data_by_course.append(
+            {
+                "course": course,
+                "disciplines": data,
+                "first_semester_diagram": _add_diagram(diagram_data, 1),
+                "second_semester_diagram": _add_diagram(diagram_data, 2),
+            }
+        )
         plt.close()
     return data_by_course
