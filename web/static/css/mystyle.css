@@ -183,6 +183,7 @@ a{
 
 .table-strip>tbody>tr:nth-child(odd){
     background-color: #42BAE2;
+    color: white;
 }
 
 .table2{
@@ -190,4 +191,5 @@ a{
     border: groove #22a7d2;
     border-radius: 10px;
     margin-left: 0.45vw;
+    font-family: Sans-Serif, serif;
 }
