@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% if data|length > 0 %}
+{% if data|length > 0 %}
 <div id="wrapper" class="form-wrapper2" style="height: 61vh" id="main-wrapper">
 {% else%}
 <div id="wrapper" class="form-wrapper2" style="height: 81vh" id="main-wrapper">
@@ -16,26 +16,63 @@
             <select class="select" id="institute" name="institute" onchange="changeInstitute()">
                 <option class="select" value=""></option>
                 {% for institute in institutes %}
+                    {% if default_institute == institute.name %}
+                    <option selected value="{{ institute.name }}">{{ institute.name }}</option>
+                    {% else %}
                     <option value="{{ institute.name }}">{{ institute.name }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
         </div>
 
+        {% if data|length > 0 %}
+            <span id="spec" class="main-form-field">Выберете направление</span>
+        <div>
+            <select class="select" id="speciality" name="speciality" onchange="changeSpeciality()">
+            {% else %}
             <span id="spec" class="main-form-field" style="display: none">Выберете направление</span>
         <div>
             <select class="select" id="speciality" name="speciality" onchange="changeSpeciality()" style="display: none">
+            {% endif %}
                 <option value=""></option>
+                  {% for speciality in specialities %}
+                    {% if default_institute == speciality.institute.name %}
+                        {% if default_speciality == speciality.name %}
+                            <option selected value="{{ speciality.name }}">{{ speciality.name }}</option>
+                        {% else %}
+                            <option value="{{ speciality.name }}">{{ speciality.name }}</option>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
             </select>
         </div>
 
+        {% if data|length > 0 %}
+            <span id="plan" class="main-form-field">Выберете курс</span>
+        <div>
+            <select class="select" id="study_plan" name="study_plan" onchange="changeStudyPlan()">
+            {% else %}
             <span id="plan" class="main-form-field" style="display: none">Выберете курс</span>
         <div>
             <select class="select" id="study_plan" name="study_plan" onchange="changeStudyPlan()" style="display: none">
+            {% endif %}
                 <option value=""></option>
+                {% for study_plan in study_plans %}
+                    {% if default_speciality == study_plan.speciality.name %}
+                        {% if default_study_plan == study_plan.name %}
+                            <option selected value="{{ study_plan.name }}">{{ study_plan.name }}</option>
+                        {% else %}
+                            <option value="{{ study_plan.name }}">{{ study_plan.name }}</option>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
             </select>
         </div>
-
-        <input id="get_study_plans" class="button" style="height: 5vh; margin: 10vh 0 2vh 0;display: none " type="submit" value="Показать учбеные планы" >
+        {% if data|length > 0 %}
+        <input id="get_study_plans" class="button" style="height: 5vh; margin: 10vh 0 2vh 0;"type="submit" value="Показать учбеные планы" >
+        {% else %}
+            <input id="get_study_plans" class="button" style="height: 5vh; margin: 10vh 0 2vh 0;display: none " type="submit" value="Показать учбеные планы" >
+        {% endif %}
     </form>
     </div>
 </div>
@@ -134,9 +171,9 @@
             }
             else
             {
-                speciality.style.display = "none";
-                studyPlan.style.display = "none";
-                button.style.display = "none";
+                {#speciality.style.display = "none";#}
+                {#studyPlan.style.display = "none";#}
+                {#button.style.display = "none";#}
             }
         }
     </script>
@@ -162,9 +199,10 @@
                     }
                 {% endfor %}
             }
-            else
-                studyPlan.style.display = "none";
-                button.style.display = "none";
+            else {
+                {#studyPlan.style.display = "none";#}
+                {#button.style.display = "none";#}
+            }
         }
     </script>
     <script>
@@ -177,7 +215,7 @@
                 button.style.display = "inline";
             }
             else {
-                button.style.display = "none";
+                {#button.style.display = "none";#}
             }
         }
     </script>
