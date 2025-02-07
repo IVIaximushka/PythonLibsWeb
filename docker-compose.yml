@@ -1,0 +1,26 @@
+services:
+  magistrant:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5430:5432"
+    environment:
+      POSTGRES_DB: magistrant
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - "db:/var/lib/postgresql/data"
+
+volumes:
+  db:

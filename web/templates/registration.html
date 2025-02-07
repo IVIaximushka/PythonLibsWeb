@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>Регистрация</h1>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button>Зарегистрироваться</button>
-    </form>
+    <div class="form-wrapper">
+        <div class="reg-form">
+            <h1>Регистрация</h1>
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="button2">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
