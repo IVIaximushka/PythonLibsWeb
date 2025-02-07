@@ -219,3 +219,11 @@ a{
     margin-left: 10vw;
     width:80%;
 }
+
+.button-sem{
+    width:100%;
+    color:white;
+    background-color: #04617F;
+    height: 6vh;
+
+}
