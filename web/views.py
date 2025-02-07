@@ -39,6 +39,9 @@ def main_view(request):
         "study_plans": StudyPlan.objects.filter(is_active=True),
         "failure": False,
         "data": [],
+        "default_institute": None,
+        "default_speciality": None,
+        "default_study_plan": None,
     }
     if request.method == "POST":
         post_data = request.POST
@@ -54,6 +57,9 @@ def main_view(request):
             return render(request, "main.html", context)
 
         context["data"] = disciplines_to_json(disciplines)
+        context["default_institute"] = post_data["institute"]
+        context["default_speciality"] = post_data["speciality"]
+        context["default_study_plan"] = post_data["study_plan"]
 
     return render(request, "main.html", context=context)
 
