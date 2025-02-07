@@ -1,9 +1,11 @@
 import pytest
 import os
 import django
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'magistrant.settings')
 django.setup()
 from .models import Institute, Speciality, StudyPlan, Discipline, StudyPlanDiscipline
+from web.tools.load_data_tools import deactivate, load_faculties, load_specialities, load_study_plans, load_disciplines
 
 
 @pytest.mark.django_db
@@ -145,3 +147,57 @@ def test_study_plan_deletion():
     study_plan.delete()
     assert StudyPlan.objects.count() == 0
     assert StudyPlanDiscipline.objects.count() == 0
+
+@pytest.mark.django_db
+def test_deactivate():
+    Institute.objects.create(name='Test Institute', id='1', is_active=True)
+    Speciality.objects.create(name='Test Speciality', id='1', institute_id='1', is_active=True)
+    StudyPlan.objects.create(name='Test Study Plan', speciality_id='1', is_active=True)
+    Discipline.objects.create(name='Test Discipline', is_active=True)
+
+    deactivate()
+
+    assert Institute.objects.first().is_active is False
+    assert Speciality.objects.first().is_active is False
+    assert StudyPlan.objects.first().is_active is False
+    assert Discipline.objects.first().is_active is False
+
+
+@pytest.mark.django_db
+def test_load_faculties():
+    faculties = {
+        'Institute A': ['School A1', 'School A2'],
+        'Institute B': []
+    }
+
+    load_faculties(faculties)
+
+    assert Institute.objects.count() == 3
+    assert Institute.objects.filter(name='School A1', school=True).exists()
+    assert Institute.objects.filter(name='School A2', school=True).exists()
+    assert Institute.objects.filter(name='Institute B', school=False, is_active=True).exists()
+
+
+@pytest.mark.django_db
+def test_load_specialities():
+    institute = Institute.objects.create(name='Test Institute')
+    specialities = ['Speciality A', 'Speciality B']
+
+    load_specialities(institute, specialities)
+
+    assert Speciality.objects.count() == 2
+    assert Speciality.objects.filter(name='Speciality A', institute=institute).exists()
+    assert Speciality.objects.filter(name='Speciality B', institute=institute).exists()
+
+
+@pytest.mark.django_db
+def test_load_study_plans():
+    institute = Institute.objects.create(name='Test Institute')
+    speciality = Speciality.objects.create(name='Test Speciality', institute=institute)
+    study_plans = ['Plan A', 'Plan B']
+
+    load_study_plans(speciality, study_plans)
+
+    assert StudyPlan.objects.count() == 2
+    assert StudyPlan.objects.filter(name='Plan A', speciality=speciality).exists()
+    assert StudyPlan.objects.filter(name='Plan B', speciality=speciality).exists()
