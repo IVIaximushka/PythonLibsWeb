@@ -5,15 +5,15 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'magistrant.settings')
 django.setup()
 from .models import Institute, Speciality, StudyPlan, Discipline, StudyPlanDiscipline
-from web.tools.load_data_tools import deactivate, load_faculties, load_specialities, load_study_plans, load_disciplines
+from web.tools.load_data_tools import deactivate, load_faculties, load_specialities, load_study_plans
 
 
 @pytest.mark.django_db
 def test_institute_creation():
     institute = Institute.objects.create(name='Тестовый институт', school=True)
     assert institute.name == 'Тестовый институт'
-    assert institute.school == True
-    assert institute.is_active == True
+    assert institute.school is True
+    assert institute.is_active is True
 
 
 @pytest.mark.django_db
@@ -22,7 +22,7 @@ def test_speciality_creation():
     speciality = Speciality.objects.create(name='Тестовая специальность', institute=institute)
     assert speciality.name == 'Тестовая специальность'
     assert speciality.institute == institute
-    assert speciality.is_active == True
+    assert speciality.is_active is True
 
 
 @pytest.mark.django_db
@@ -32,14 +32,14 @@ def test_study_plan_creation():
     study_plan = StudyPlan.objects.create(name='Тестовый учебный план', speciality=speciality)
     assert study_plan.name == 'Тестовый учебный план'
     assert study_plan.speciality == speciality
-    assert study_plan.is_active == True
+    assert study_plan.is_active is True
 
 
 @pytest.mark.django_db
 def test_discipline_creation():
     discipline = Discipline.objects.create(name='Тестовая дисциплина')
     assert discipline.name == 'Тестовая дисциплина'
-    assert discipline.is_active == True
+    assert discipline.is_active is True
 
 
 @pytest.mark.django_db
@@ -66,12 +66,12 @@ def test_study_plan_discipline_creation():
     assert study_plan_discipline.course == 1
     assert study_plan_discipline.code == '123'
     assert study_plan_discipline.semester == 1
-    assert study_plan_discipline.exam == True
-    assert study_plan_discipline.test == False
+    assert study_plan_discipline.exam is True
+    assert study_plan_discipline.test is False
     assert study_plan_discipline.lecture == 10
     assert study_plan_discipline.practice == 5
     assert study_plan_discipline.lab == 2
-    assert study_plan_discipline.by_choice == False
+    assert study_plan_discipline.by_choice is False
 
 
 @pytest.mark.django_db
@@ -147,6 +147,7 @@ def test_study_plan_deletion():
     study_plan.delete()
     assert StudyPlan.objects.count() == 0
     assert StudyPlanDiscipline.objects.count() == 0
+
 
 @pytest.mark.django_db
 def test_deactivate():
