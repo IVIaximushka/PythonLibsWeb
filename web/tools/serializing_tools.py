@@ -57,6 +57,7 @@ def _build_diagram():
 def _add_diagram(diagram_data: list[tuple], semester: int):
     filtered_and_sorted_data = _get_filtered_data(diagram_data, semester)
     if sum(map(lambda discipline: discipline[1], filtered_and_sorted_data)) != 0:
+        plt.figure(figsize=(7, 3))
         plt.barh(
             [i[0] for i in filtered_and_sorted_data],
             [i[1] for i in filtered_and_sorted_data],
@@ -68,6 +69,7 @@ def _add_diagram(diagram_data: list[tuple], semester: int):
 def _add_pie_diagram(diagram_data: list[tuple], semester: int):
     filtered_and_sorted_data = _get_filtered_data(diagram_data, semester)
     if sum(map(lambda discipline: discipline[1], filtered_and_sorted_data)) != 0:
+        plt.figure(figsize=(6, 4))
         plt.pie(
             [i[1] for i in filtered_and_sorted_data],
             labels=[i[0] for i in filtered_and_sorted_data],

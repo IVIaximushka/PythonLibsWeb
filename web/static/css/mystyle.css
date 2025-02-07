@@ -73,6 +73,10 @@
     flex-direction: column;
 }
 
+.flex-center{
+    align-items: center;
+}
+
 /*main form ------------------*/
 
 .main-form-container{
@@ -205,4 +209,13 @@ a{
     margin-right: 5vh;
     margin-bottom: 9.51vh;
     padding: 1vh 4vh 1vh 4vh;
+}
+
+.pie{
+    width:50%; height: 50%;
+}
+
+.bar{
+    margin-left: 10vw;
+    width:80%;
 }
