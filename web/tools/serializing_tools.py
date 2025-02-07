@@ -31,13 +31,15 @@ def _add_diagram_data(discipline: StudyPlanDiscipline, data: list) -> None:
             discipline.discipline.name,
             discipline.lecture + discipline.practice + discipline.lab,
             discipline.semester,
+            discipline.exam,
+            discipline.test,
         )
     )
 
 
 def _get_filtered_data(data: list[tuple], semester: int) -> list[tuple]:
     filtered_and_sorted_data = sorted(
-        filter(lambda discipline: discipline[2] == semester, data),
+        filter(lambda discipline: discipline[2] == semester and discipline[1] != 0, data),
         key=lambda discipline: discipline[1],
     )
     return filtered_and_sorted_data
@@ -54,6 +56,16 @@ def _build_diagram():
     return graphic
 
 
+def _select_color(discipline: tuple):
+    if discipline[3] and discipline[4]:
+        return 'red'
+    elif discipline[3]:
+        return 'orange'
+    elif discipline[4]:
+        return 'yellow'
+    return 'green'
+
+
 def _add_diagram(diagram_data: list[tuple], semester: int):
     filtered_and_sorted_data = _get_filtered_data(diagram_data, semester)
     if sum(map(lambda discipline: discipline[1], filtered_and_sorted_data)) != 0:
@@ -61,6 +73,7 @@ def _add_diagram(diagram_data: list[tuple], semester: int):
         plt.barh(
             [i[0] for i in filtered_and_sorted_data],
             [i[1] for i in filtered_and_sorted_data],
+            color=[_select_color(i) for i in filtered_and_sorted_data],
         )
         return _build_diagram()
     return None
