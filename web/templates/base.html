@@ -35,6 +35,9 @@
                 <div style="margin-left: 30%" class="flex-container">
                     <b class="username"><i>{{ user.username }}</i></b>
                     {% if user.is_superuser %}
+
+        <div class="button" style="width:10vw; font-size: 15px; padding-top: 1.5vh" onclick="location.href='{% url 'update' %}'">Обновить данные</div>
+
                         <div  class="button">
                                 <a href="/admin/"><div style="color:white">Админка</div></a>
                                 </div>

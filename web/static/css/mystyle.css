@@ -84,7 +84,7 @@
     min-height: 10vh;
     background-color: var(--color-primary);
     border-radius: 2vh;
-    margin-top: 2vh;
+    margin-top: 8vh;
     padding: 2vh 0 4vh;
     display: flex;
     flex-flow: column;
@@ -225,5 +225,8 @@ a{
     color:white;
     background-color: #04617F;
     height: 6vh;
+}
 
+input{
+    color:black;
 }

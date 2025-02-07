@@ -5,9 +5,6 @@
 {% else%}
 <div id="wrapper" class="form-wrapper2" style="height: 81vh" id="main-wrapper">
 {% endif%}
-    {% if user.is_superuser %}
-        <button class="button" style="height: 5vh; margin-top: 1vh" onclick="location.href='{% url 'update' %}'">Обновить данные</button>
-    {% endif %}
 <div class="main-form-container">
     <form action="" method="post">
         {% csrf_token %}
@@ -48,7 +45,7 @@
         </div>
 
         {% if data|length > 0 %}
-            <span id="plan" class="main-form-field">Выберете курс</span>
+            <span id="plan" class="main-form-field">Выберете программу</span>
         <div>
             <select class="select" id="study_plan" name="study_plan" onchange="changeStudyPlan()">
             {% else %}
