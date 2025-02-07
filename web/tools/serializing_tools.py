@@ -58,10 +58,10 @@ def _build_diagram():
 
 def _select_color(discipline: tuple):
     if discipline[3] and discipline[4]:
+        return 'purple'
+    if discipline[3]:
         return 'red'
-    elif discipline[3]:
-        return 'orange'
-    elif discipline[4]:
+    if discipline[4]:
         return 'yellow'
     return 'green'
 
@@ -86,6 +86,7 @@ def _add_pie_diagram(diagram_data: list[tuple], semester: int):
         plt.pie(
             [i[1] for i in filtered_and_sorted_data],
             labels=[i[0] for i in filtered_and_sorted_data],
+            autopct="%1.1f%%"
         )
         return _build_diagram()
     return None
