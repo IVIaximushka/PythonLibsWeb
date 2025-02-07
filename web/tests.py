@@ -3,6 +3,9 @@ import os
 import django
 import pytest
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "magistrant.settings")
+django.setup()
+
 from web.tools.load_data_tools import (
     deactivate,
     load_faculties,
@@ -11,9 +14,6 @@ from web.tools.load_data_tools import (
 )
 
 from .models import Discipline, Institute, Speciality, StudyPlan, StudyPlanDiscipline
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "magistrant.settings")
-django.setup()
 
 
 @pytest.mark.django_db
