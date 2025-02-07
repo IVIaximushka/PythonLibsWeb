@@ -57,14 +57,18 @@ class Discipline(models.Model):
 
 class StudyPlanDiscipline(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="Активен")
-    course = models.SmallIntegerField()
-    code = models.CharField(max_length=100)
-    semester = models.SmallIntegerField()
-    exam = models.BooleanField()
-    test = models.BooleanField()
-    lecture = models.IntegerField()
-    practice = models.IntegerField()
-    lab = models.IntegerField()
-    by_choice = models.BooleanField(default=False)
+    course = models.SmallIntegerField(verbose_name="Курс")
+    code = models.CharField(max_length=100, verbose_name="Код")
+    semester = models.SmallIntegerField(verbose_name="Семестр")
+    exam = models.BooleanField(verbose_name="Экзамен")
+    test = models.BooleanField(verbose_name="Зачёт")
+    lecture = models.IntegerField(verbose_name="Лекции")
+    practice = models.IntegerField(verbose_name="Практика")
+    lab = models.IntegerField(verbose_name="Лабораторные")
+    by_choice = models.BooleanField(default=False, verbose_name="По выбору")
     study_plan = models.ForeignKey(StudyPlan, on_delete=models.CASCADE, verbose_name="Учебный план")
     discipline = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name="Дисциплина")
+
+    class Meta:
+        verbose_name = "учебный план - дисциплина"
+        verbose_name_plural = "учебный план - дисциплина"

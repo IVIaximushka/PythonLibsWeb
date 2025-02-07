@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from web.models import Institute, Speciality, StudyPlan, Discipline
+from web.models import Institute, Speciality, StudyPlan, Discipline, StudyPlanDiscipline
 
 
 class InstituteAdmin(admin.ModelAdmin):
@@ -27,7 +27,14 @@ class DisciplineAdmin(admin.ModelAdmin):
     list_filter = ("is_active",)
 
 
+class StudyPlanDisciplineAdmin(admin.ModelAdmin):
+    list_display = ("id", "study_plan", "discipline", "code", "course", "semester", "exam", "test", "lecture", "practice", "lab", "by_choice")
+    search_fields = ("id", "study_plan__name", "discipline__name")
+    list_filter = ("is_active", "by_choice", "course", "semester")
+
+
 admin.site.register(Institute, InstituteAdmin)
 admin.site.register(Speciality, SpecialityAdmin)
 admin.site.register(StudyPlan, StudyPlanAdmin)
 admin.site.register(Discipline, DisciplineAdmin)
+admin.site.register(StudyPlanDiscipline, StudyPlanDisciplineAdmin)
