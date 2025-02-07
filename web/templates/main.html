@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     toggleButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const courseId = this.id.split('-')[1]; // Получаем часть id после "course-"
+            const courseId = this.id.split('-')[1];
             const content = document.getElementById(`course-${courseId}`);
 
             if (content.style.display === "none") {
@@ -289,20 +289,20 @@ document.addEventListener("DOMContentLoaded", function() {
                 this.style.backgroundColor = "#0b97c4";
             } else {
                 this.style.backgroundColor = "#04617F";
-                content.style.maxHeight = null; // Скрываем с анимацией
+                content.style.maxHeight = null;
                 setTimeout(() => {
-                    content.style.display = "none"; // Скрываем контент после окончания анимации
-                }, 300); // Длительность анимации
+                    content.style.display = "none";
+                }, 300);
             }
             contents.forEach(content => {
                 const courseId = this.id.split('-')[1];
                 if(content.id.split('-')[1] != courseId){
                     const buttonChange = document.getElementById('button-'+content.id.split('-')[1])
-                    content.style.maxHeight = null; // Скрываем с анимацией
+                    content.style.maxHeight = null;
                     buttonChange.style.backgroundColor = "#04617F";
                     setTimeout(() => {
-                        content.style.display = "none"; // Скрываем контент после окончания анимации
-                    }, 300); // Длительность анимации
+                        content.style.display = "none";
+                    }, 300);
                 }
             });
 
