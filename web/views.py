@@ -31,7 +31,7 @@ from web.tools.web_tools import (
 )
 
 
-@login_required(login_url="/authentication")
+@login_required
 def main_view(request):
     context = {
         "institutes": Institute.objects.filter(is_active=True),
@@ -94,13 +94,13 @@ def auth_view(request):
     return render(request, "auth.html", {"form": form})
 
 
-@login_required(login_url="/authentication/")
+@login_required
 def logout_view(request):
     logout(request)
     return redirect("main")
 
 
-@login_required(login_url="/authentication/")
+@login_required
 def update_data_view(request):
     if not request.user.is_superuser:
         return redirect("main")

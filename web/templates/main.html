@@ -9,19 +9,55 @@
         <select id="institute" name="institute" onchange="changeInstitute()">
             <option value=""></option>
             {% for institute in institutes %}
-                <option value="{{ institute.name }}">{{ institute.name }}</option>
+                {% if default_institute == institute.name %}
+                    <option selected value="{{ institute.name }}">{{ institute.name }}</option>
+                {% else %}
+                    <option value="{{ institute.name }}">{{ institute.name }}</option>
+                {% endif %}
             {% endfor %}
         </select>
 
-        <select id="speciality" name="speciality" onchange="changeSpeciality()" style="display: none">
-            <option value=""></option>
-        </select>
+        {% if default_speciality %}
+            <select id="speciality" name="speciality" onchange="changeSpeciality()" style="display: inline">
+                <option value=""></option>
+                {% for speciality in specialities %}
+                    {% if default_institute == speciality.institute.name %}
+                        {% if default_speciality == speciality.name %}
+                            <option selected value="{{ speciality.name }}">{{ speciality.name }}</option>
+                        {% else %}
+                            <option value="{{ speciality.name }}">{{ speciality.name }}</option>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </select>
+        {% else %}
+            <select id="speciality" name="speciality" onchange="changeSpeciality()" style="display: none">
+                <option value=""></option>
+            </select>
+        {% endif %}
 
-        <select id="study_plan" name="study_plan" onchange="changeStudyPlan()" style="display: none">
-            <option value=""></option>
-        </select>
+        {% if default_study_plan %}
+            <select id="study_plan" name="study_plan" onchange="changeStudyPlan()" style="display: inline">
+                <option value=""></option>
+                {% for study_plan in study_plans %}
+                    {% if default_speciality == study_plan.speciality.name %}
+                        {% if default_study_plan == study_plan.name %}
+                            <option selected value="{{ study_plan.name }}">{{ study_plan.name }}</option>
+                        {% else %}
+                            <option value="{{ study_plan.name }}">{{ study_plan.name }}</option>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </select>
 
-        <input id="get_study_plans" type="submit" value="Показать учбеные планы" style="display: none">
+            <input id="get_study_plans" type="submit" value="Показать учбеные планы" style="display: inline">
+        {% else %}
+            <select id="study_plan" name="study_plan" onchange="changeStudyPlan()" style="display: none">
+                <option value=""></option>
+            </select>
+
+            <input id="get_study_plans" type="submit" value="Показать учбеные планы" style="display: none">
+        {% endif %}
     </form>
 
     {% if failure %}
