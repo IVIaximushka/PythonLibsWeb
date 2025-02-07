@@ -36,7 +36,9 @@
                     <b class="username"><i>{{ user.username }}</i></b>
                     {% if user.is_superuser %}
 
-        <div class="button" style="width:10vw; font-size: 15px; padding-top: 1.5vh" onclick="location.href='{% url 'update' %}'">Обновить данные</div>
+                        <div class="button" style="width:10vw; font-size: 15px; padding-top: 1.5vh">
+                            <a href="{% url 'update' %}"><div style="color:white">Обновить данные</div></a>
+                        </div>
 
                         <div  class="button">
                                 <a href="/admin/"><div style="color:white">Админка</div></a>
