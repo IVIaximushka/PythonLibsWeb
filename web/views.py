@@ -31,7 +31,7 @@ from web.tools.web_tools import (
 )
 
 
-@login_required(login_url="/authentication")
+@login_required
 def main_view(request):
     context = {
         "institutes": Institute.objects.filter(is_active=True),
@@ -39,6 +39,9 @@ def main_view(request):
         "study_plans": StudyPlan.objects.filter(is_active=True),
         "failure": False,
         "data": [],
+        "default_institute": None,
+        "default_speciality": None,
+        "default_study_plan": None,
     }
     if request.method == "POST":
         post_data = request.POST
@@ -54,6 +57,9 @@ def main_view(request):
             return render(request, "main.html", context)
 
         context["data"] = disciplines_to_json(disciplines)
+        context["default_institute"] = post_data["institute"]
+        context["default_speciality"] = post_data["speciality"]
+        context["default_study_plan"] = post_data["study_plan"]
 
     return render(request, "main.html", context=context)
 
@@ -94,13 +100,13 @@ def auth_view(request):
     return render(request, "auth.html", {"form": form})
 
 
-@login_required(login_url="/authentication/")
+@login_required
 def logout_view(request):
     logout(request)
     return redirect("main")
 
 
-@login_required(login_url="/authentication/")
+@login_required
 def update_data_view(request):
     if not request.user.is_superuser:
         return redirect("main")
